@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo Leveling: Real Life Level-Up System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Crystal Background Canvas -->
+    <canvas id="crystalCanvas"></canvas>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="system-title">
+                <h1><i class="fas fa-dungeon"></i> SOLO LEVELING SYSTEM</h1>
+                <p class="system-subtitle">REAL-LIFE LEVEL-UP INTERFACE</p>
+            </div>
+            <div class="player-badge">
+                <div class="player-name">PLAYER: 
+                    <span id="playerName">SUNG JIN-WOO</span>
+                    <button class="btn-icon" id="editName" title="Edit Name" style="margin-left:8px;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="player-rank" id="playerRank">E-RANK HUNTER</div>
+                <!-- Rank progress bar (E -> S) -->
+                <div class="rank-bar" title="Progress to S-Rank">
+                    <div class="rank-progress" id="rankProgress" style="width:0%"></div>
+                </div>
+            </div>
+            <div style="margin-top:8px; display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+                <button class="btn-icon" id="shopBtn" title="Shop"><i class="fas fa-store"></i></button>
+                <button class="btn-icon" id="inventoryBtn" title="Inventory"><i class="fas fa-suitcase"></i></button>
+                <button class="btn-icon" id="skillTreeBtn" title="Skill Tree"><i class="fas fa-network-wired"></i></button>
+                <button class="btn-icon" id="craftBtn" title="Crafting"><i class="fas fa-hammer"></i></button>
+                <button class="btn-icon" id="petBtn" title="Pets"><i class="fas fa-dragon"></i></button>
+                <button class="btn-icon" id="challengesBtn" title="Challenges"><i class="fas fa-calendar-day"></i></button>
+                <button class="btn-icon" id="achievementsBtn" title="Achievements"><i class="fas fa-trophy"></i></button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel: Player Stats -->
+            <section class="panel stats-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-user"></i> PLAYER STATUS</h2>
+                    <div class="panel-actions">
+                        <button class="btn-icon" id="resetData" title="Reset System">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="level-display">
+                    <div class="level-circle">
+                        <span class="level-number" id="playerLevel">1</span>
+                        <span class="level-label">LEVEL</span>
+                    </div>
+                    <div class="xp-display">
+                        <div class="xp-info">
+                            <span class="xp-current" id="currentXP">0</span>
+                            <span class="xp-separator">/</span>
+                            <span class="xp-required" id="requiredXP">100</span>
+                            <span class="xp-label">XP</span>
+                        </div>
+                        <div class="xp-bar-container">
+                            <div class="xp-bar" id="xpBar"></div>
+                        </div>
+                        <div class="xp-next">Next Level: <span id="xpNeeded">100</span> XP</div>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <h3 class="stats-title"><i class="fas fa-chart-line"></i> ATTRIBUTES</h3>
+                    <div class="stats-points">
+                        <span class="stat-points-label">STAT POINTS AVAILABLE:</span>
+                        <span class="stat-points-value" id="statPoints">0</span>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-info">
+                            <span class="stat-icon strength"><i class="fas fa-fist-raised"></i></span>
+                            <span class="stat-name">STRENGTH</span>
+                        </div>
+                        <div class="stat-controls">
+                            <span class="stat-value" id="strengthValue">5</span>
+                            <button class="btn-stat" data-stat="strength"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-info">
+                            <span class="stat-icon intelligence"><i class="fas fa-brain"></i></span>
+                            <span class="stat-name">INTELLIGENCE</span>
+                        </div>
+                        <div class="stat-controls">
+                            <span class="stat-value" id="intelligenceValue">5</span>
+                            <button class="btn-stat" data-stat="intelligence"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-info">
+                            <span class="stat-icon agility"><i class="fas fa-running"></i></span>
+                            <span class="stat-name">AGILITY</span>
+                        </div>
+                        <div class="stat-controls">
+                            <span class="stat-value" id="agilityValue">5</span>
+                            <button class="btn-stat" data-stat="agility"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-total">
+                        <span>TOTAL STATS:</span>
+                        <span id="totalStats">15</span>
+                    </div>
+                    
+                    <!-- Daily Login Rewards -->
+                    <div class="daily-rewards">
+                        <h3 class="daily-title"><i class="fas fa-gift"></i> DAILY REWARDS</h3>
+                        <div class="rewards-grid" id="rewardsGrid"></div>
+                        <div class="streak-info">
+                            <span>Current Streak: <strong id="dailyStreak">0</strong> days</span>
+                            <button class="btn-small" id="claimReward">CLAIM TODAY'S REWARD</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="unlocks-container">
+                    <h3 class="unlocks-title"><i class="fas fa-lock-open"></i> UNLOCKED FEATURES</h3>
+                    <div class="unlocks-list" id="unlocksList">
+                        <div class="unlock-item unlocked">Daily Quests</div>
+                        <div class="unlock-item locked">Weekly Quests (Level 5)</div>
+                        <div class="unlock-item locked">Streak System (Level 10)</div>
+                        <div class="unlock-item locked">Achievements (Level 15)</div>
+                        <div class="unlock-item locked">Shadow Army (Level 20)</div>
+                        <div class="unlock-item locked">Auto-Quest System (Level 3)</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Center Panel: Quests & System Messages -->
+            <section class="panel quests-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-tasks"></i> DAILY QUESTS</h2>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-secondary" id="generateRandomQuest">
+                            <i class="fas fa-dice"></i> RANDOM QUEST
+                        </button>
+                        <button class="btn-primary" id="createQuestBtn">
+                            <i class="fas fa-plus-circle"></i> CREATE QUEST
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Auto-quest controls -->
+                <div class="auto-quest-controls">
+                    <div class="auto-quest-toggle">
+                        <i class="fas fa-robot"></i>
+                        <span>Auto-quests:</span>
+                        <label class="switch">
+                            <input type="checkbox" id="autoQuestCheckbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="quest-timer">
+                        <i class="fas fa-clock"></i> Next in: <span id="nextQuestTimer">5:00</span>
+                    </div>
+                </div>
+                
+                <div class="quests-list" id="questsList">
+                    <!-- Quests will be dynamically added here -->
+                    <div class="empty-quests">
+                        <i class="fas fa-scroll"></i>
+                        <p>No active quests. Create your first quest to begin your journey!</p>
+                    </div>
+                </div>
+                
+                <div class="system-messages">
+                    <div class="messages-header">
+                        <h3><i class="fas fa-broadcast-tower"></i> SYSTEM MESSAGES</h3>
+                        <button class="btn-icon" id="clearMessages">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="messages-container" id="systemMessages">
+                        <div class="system-message">
+                            <span class="message-tag">[SYSTEM]</span>
+                            <span class="message-text">Welcome to the Solo Leveling System. Begin your journey by creating quests!</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Right Panel: Recent Activity & Milestones -->
+            <section class="panel activity-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-history"></i> RECENT ACTIVITY</h2>
+                    <div class="streak-display">
+                        <i class="fas fa-fire"></i>
+                        <span>STREAK: <span id="streakCount">0</span> DAYS</span>
+                    </div>
+                </div>
+                
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <span class="activity-icon"><i class="fas fa-star"></i></span>
+                        <div class="activity-content">
+                            <div class="activity-text">System initialized</div>
+                            <div class="activity-time">Just now</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="milestones">
+                    <h3><i class="fas fa-trophy"></i> NEXT MILESTONES</h3>
+                    <div class="milestone-item">
+                        <div class="milestone-info">
+                            <span class="milestone-level">Level 5</span>
+                            <span class="milestone-desc">Unlock Weekly Quests</span>
+                        </div>
+                        <div class="milestone-progress">
+                            <div class="milestone-bar">
+                                <div class="milestone-fill" id="milestone5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-info">
+                            <span class="milestone-level">Level 10</span>
+                            <span class="milestone-desc">Unlock Streak System</span>
+                        </div>
+                        <div class="milestone-progress">
+                            <div class="milestone-bar">
+                                <div class="milestone-fill" id="milestone10"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="milestone-item">
+                        <div class="milestone-info">
+                            <span class="milestone-level">Level 15</span>
+                            <span class="milestone-desc">Unlock Achievements</span>
+                        </div>
+                        <div class="milestone-progress">
+                            <div class="milestone-bar">
+                                <div class="milestone-fill" id="milestone15"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="player-summary">
+                    <h3><i class="fas fa-chart-bar"></i> PLAYER SUMMARY</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalQuests">0</div>
+                            <div class="summary-label">Quests Completed</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="totalXP">0</div>
+                            <div class="summary-label">Total XP Earned</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="daysActive">1</div>
+                            <div class="summary-label">Days Active</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value" id="highestStreak">0</div>
+                            <div class="summary-label">Highest Streak</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gold Display -->
+                <div class="gold-display">
+                    <h3><i class="fas fa-coins"></i> WALLET</h3>
+                    <div class="gold-amount">
+                        <i class="fas fa-coins"></i>
+                        <span id="goldAmount">1000</span> Gold
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-text">
+                <i class="fas fa-terminal"></i> SYSTEM STATUS: <span class="online">ONLINE</span> | 
+                LAST UPDATE: <span id="lastUpdate">Just now</span>
+            </div>
+            <div class="footer-actions">
+                <button class="btn-footer" id="exportData">
+                    <i class="fas fa-download"></i> EXPORT DATA
+                </button>
+                <button class="btn-footer" id="importData">
+                    <i class="fas fa-upload"></i> IMPORT DATA
+                </button>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Quest Creation Modal -->
+    <div class="modal" id="questModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> CREATE NEW QUEST</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="questName"><i class="fas fa-heading"></i> QUEST NAME</label>
+                    <input type="text" id="questName" placeholder="Enter quest name...">
+                </div>
+                <div class="form-group">
+                    <label for="questCategory"><i class="fas fa-tag"></i> QUEST CATEGORY</label>
+                    <div class="category-selector">
+                        <button class="category-btn active" data-category="strength">
+                            <i class="fas fa-fist-raised"></i> STRENGTH
+                        </button>
+                        <button class="category-btn" data-category="intelligence">
+                            <i class="fas fa-brain"></i> INTELLIGENCE
+                        </button>
+                        <button class="category-btn" data-category="agility">
+                            <i class="fas fa-running"></i> AGILITY
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="questXP"><i class="fas fa-star"></i> XP REWARD</label>
+                    <div class="xp-selector">
+                        <button class="xp-option" data-xp="10">10 XP</button>
+                        <button class="xp-option" data-xp="25">25 XP</button>
+                        <button class="xp-option active" data-xp="50">50 XP</button>
+                        <button class="xp-option" data-xp="100">100 XP</button>
+                        <button class="xp-option" data-xp="150">150 XP</button>
+                    </div>
+                    <div class="custom-xp">
+                        <input type="number" id="customXP" min="10" max="500" placeholder="Or enter custom XP (10-500)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="questDescription"><i class="fas fa-align-left"></i> QUEST DESCRIPTION (Optional)</label>
+                    <textarea id="questDescription" placeholder="Describe your quest..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelQuest">CANCEL</button>
+                <button class="btn-primary" id="saveQuest">CREATE QUEST</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Level Up Overlay -->
+    <div class="levelup-overlay" id="levelUpOverlay">
+        <div class="levelup-content">
+            <div class="levelup-title">LEVEL UP!</div>
+            <div class="levelup-newlevel" id="newLevel">2</div>
+            <div class="levelup-message">You have reached level <span id="levelDisplay">2</span>!</div>
+            <div class="levelup-reward">
+                <i class="fas fa-gem"></i>
+                <span>REWARD: <span id="statPointsReward">1</span> STAT POINT(S)</span>
+            </div>
+            <div class="levelup-unlock" id="unlockMessage"></div>
+            <button class="btn-primary levelup-close" id="closeLevelUp">CONTINUE</button>
+        </div>
+    </div>
+    
+    <!-- Import/Export Modal -->
+    <div class="modal" id="dataModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-database"></i> SYSTEM DATA</h2>
+                <button class="modal-close" id="closeDataModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="data-section" id="exportSection">
+                    <h3><i class="fas fa-download"></i> EXPORT DATA</h3>
+                    <p>Copy your system data to save or transfer to another device:</p>
+                    <textarea id="exportDataText" readonly></textarea>
+                    <button class="btn-primary" id="copyData">COPY TO CLIPBOARD</button>
+                </div>
+                <div class="data-section" id="importSection">
+                    <h3><i class="fas fa-upload"></i> IMPORT DATA</h3>
+                    <p>Paste previously exported system data to restore your progress:</p>
+                    <textarea id="importDataText" placeholder="Paste your system data here..."></textarea>
+                    <button class="btn-primary" id="restoreData">RESTORE DATA</button>
+                    <div class="warning">
+                        <i class="fas fa-exclamation-triangle"></i> Warning: This will overwrite your current data!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="modal" id="shopModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-store"></i> SHOP</h2><button class="modal-close" onclick="document.getElementById('shopModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body" id="shopList" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div class="modal" id="inventoryModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-suitcase"></i> INVENTORY</h2><button class="modal-close" onclick="document.getElementById('inventoryModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body" id="inventoryList"></div>
+        </div>
+    </div>
+
+    <!-- Skill Tree Modal -->
+    <div class="modal" id="skillTreeModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-network-wired"></i> SKILL TREE</h2><button class="modal-close" onclick="document.getElementById('skillTreeModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body" id="skillTree" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+    </div>
+
+    <!-- Crafting Modal -->
+    <div class="modal" id="craftModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-hammer"></i> CRAFTING</h2><button class="modal-close" onclick="document.getElementById('craftModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body">
+                <div id="craftList" style="display:flex;flex-direction:column;gap:10px;"></div>
+                <h4 style="margin-top:15px">Resources</h4>
+                <div id="resourcesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pets Modal -->
+    <div class="modal" id="petModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-dragon"></i> PETS</h2><button class="modal-close" onclick="document.getElementById('petModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body" id="petsList"></div>
+        </div>
+    </div>
+
+    <!-- Challenges Modal -->
+    <div class="modal" id="challengesModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-calendar-day"></i> CHALLENGES</h2><button class="modal-close" onclick="document.getElementById('challengesModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body" id="challengesList"></div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div class="modal" id="achievementsModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2><i class="fas fa-trophy"></i> ACHIEVEMENTS</h2><button class="modal-close" onclick="document.getElementById('achievementsModal').classList.remove('active')">&times;</button></div>
+            <div class="modal-body" id="achievementsList"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
